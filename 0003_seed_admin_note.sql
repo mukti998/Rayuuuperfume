@@ -1,0 +1,14 @@
+-- ============================================================
+-- Promoting your first admin user
+-- ============================================================
+-- 1. Sign up a user through the app's normal Supabase Auth flow first
+--    (there is no public sign-up UI — create the user directly in the
+--    Supabase Dashboard: Authentication -> Users -> Add user, or via
+--    the Supabase CLI/Admin API with a strong password).
+-- 2. Then run this, swapping in that user's email, to promote them to admin:
+--
+-- update public.profiles
+-- set role = 'admin'
+-- where id = (select id from auth.users where email = 'owner@example.com');
+--
+-- No account can reach the admin dashboard until its profiles.role = 'admin'.
