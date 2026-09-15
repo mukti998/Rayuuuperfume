@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
+import { deleteAllProductImages } from '../../utils/storage';
 import type { Product } from '../../types/database';
 
 export function AdminProducts() {
@@ -25,7 +26,13 @@ export function AdminProducts() {
   }
 
   async function remove(product: Product) {
-    if (!confirm(`Delete "${product.name}"? This also removes its image records.`)) return;
+    if (!confirm(`Delete "${product.name}"? This removes its images from both the database and storage.`)) return;
+
+    // Clean up storage files BEFORE deleting the product (cascade only
+    // removes DB rows, not the actual storage objects).
+    await deleteAllProductImages(product.id);
+
+    // Now delete the product — ON DELETE CASCADE handles product_images rows
     await supabase.from('products').delete().eq('id', product.id);
     load();
   }

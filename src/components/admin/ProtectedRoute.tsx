@@ -2,7 +2,7 @@ import { Navigate } from 'react-router-dom';
 import type { ReactNode } from 'react';
 import { useAuth } from '../../context/AuthContext';
 
-const ADMIN_PATH = import.meta.env.VITE_ADMIN_PATH || '/gateway-7f3k1';
+const ADMIN_PATH = '/gateway-rayu';
 
 /**
  * Wraps every admin page. Not linked from any public nav or sitemap —

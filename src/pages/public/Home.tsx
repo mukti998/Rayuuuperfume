@@ -42,6 +42,7 @@ export function Home() {
   return (
     <div>
       <section className="hero">
+        <img src="/logo.png" alt="Reis Perfumes" className="hero-logo" />
         <h1>Luxury, worn quietly.</h1>
         <p>Fragrances built to hold their shape through a long day.</p>
         <Link to="/products" className="btn-gold">View the collection</Link>

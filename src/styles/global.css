@@ -26,14 +26,18 @@ a { color: inherit; text-decoration: none; }
   display: flex; justify-content: space-between; align-items: center;
   padding: 24px 40px; border-bottom: 1px solid var(--line);
 }
-.brand { font-family: 'Cormorant Garamond', serif; font-size: 20px; letter-spacing: 0.14em; }
-.brand span { color: var(--lemon); }
+.brand { font-family: 'Cormorant Garamond', serif; font-size: 20px; letter-spacing: 0.14em; display: flex; align-items: center; gap: 12px; }
+.brand-logo { height: 36px; width: auto; }
+.brand-accent { color: var(--lemon); }
+.brand-text { display: flex; align-items: baseline; gap: 6px; }
 .site-header nav { display: flex; gap: 28px; font-size: 14px; }
 
 main { min-height: 70vh; padding: 40px; max-width: 1100px; margin: 0 auto; }
 .site-footer { text-align: center; padding: 30px; border-top: 1px solid var(--line); color: var(--ivory-dim); font-size: 13px; }
+.footer-logo { height: 48px; width: auto; margin-bottom: 12px; opacity: 0.7; }
 
 .hero { text-align: center; padding: 80px 0; }
+.hero-logo { height: 120px; width: auto; margin-bottom: 24px; }
 .hero h1 { font-size: 48px; }
 .btn-gold {
   display: inline-block; background: var(--lemon); color: var(--black);

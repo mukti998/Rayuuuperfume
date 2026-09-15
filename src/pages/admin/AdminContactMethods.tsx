@@ -10,6 +10,12 @@ export function AdminContactMethods() {
   const [value, setValue] = useState('');
   const [error, setError] = useState<string | null>(null);
 
+  // Edit state
+  const [editing, setEditing] = useState<ContactMethod | null>(null);
+  const [editLabel, setEditLabel] = useState('');
+  const [editValue, setEditValue] = useState('');
+  const [editError, setEditError] = useState<string | null>(null);
+
   async function load() {
     const { data } = await supabase.from('contact_methods').select('*').order('sort_order');
     setMethods((data as ContactMethod[]) || []);
@@ -29,6 +35,18 @@ export function AdminContactMethods() {
     return null;
   }
 
+  function validateEdit(): string | null {
+    if (!editLabel.trim()) return 'Label is required.';
+    if (!editValue.trim()) return 'Value is required.';
+    if (editing) {
+      if (editing.type === 'whatsapp' && !isValidPhone(editValue)) return 'Enter a valid WhatsApp number.';
+      if (editing.type === 'phone' && !isValidPhone(editValue)) return 'Enter a valid phone number.';
+      if (editing.type === 'telegram' && !isValidTelegram(editValue)) return 'Enter a valid Telegram username or t.me link.';
+      if (editing.type === 'email' && !isValidEmail(editValue)) return 'Enter a valid email address.';
+    }
+    return null;
+  }
+
   async function handleAdd(e: FormEvent) {
     e.preventDefault();
     const validationError = validate();
@@ -44,6 +62,35 @@ export function AdminContactMethods() {
     });
     setLabel('');
     setValue('');
+    load();
+  }
+
+  function startEdit(m: ContactMethod) {
+    setEditing(m);
+    setEditLabel(m.label);
+    setEditValue(m.value);
+    setEditError(null);
+  }
+
+  function cancelEdit() {
+    setEditing(null);
+    setEditLabel('');
+    setEditValue('');
+    setEditError(null);
+  }
+
+  async function handleEditSave(e: FormEvent) {
+    e.preventDefault();
+    if (!editing) return;
+    const validationError = validateEdit();
+    if (validationError) return setEditError(validationError);
+    setEditError(null);
+
+    await supabase
+      .from('contact_methods')
+      .update({ label: editLabel.trim(), value: editValue.trim() })
+      .eq('id', editing.id);
+    cancelEdit();
     load();
   }
 
@@ -78,21 +125,42 @@ export function AdminContactMethods() {
         <tbody>
           {methods.map((m) => (
             <tr key={m.id}>
-              <td>{m.label}</td>
-              <td>{m.type}</td>
-              <td>{m.value}</td>
-              <td>
-                <button className="status-pill" onClick={() => toggleEnabled(m)}>
-                  {m.enabled ? 'enabled' : 'disabled'}
-                </button>
-              </td>
-              <td>
-                <button onClick={() => remove(m)}>Delete</button>
-              </td>
+              {editing?.id === m.id ? (
+                <>
+                  <td>
+                    <input value={editLabel} onChange={(e) => setEditLabel(e.target.value)} />
+                  </td>
+                  <td>{m.type}</td>
+                  <td>
+                    <input value={editValue} onChange={(e) => setEditValue(e.target.value)} />
+                  </td>
+                  <td></td>
+                  <td className="admin-table-actions">
+                    <button className="btn-gold" onClick={handleEditSave} style={{ padding: '4px 12px', marginTop: 0 }}>Save</button>
+                    <button onClick={cancelEdit}>Cancel</button>
+                  </td>
+                </>
+              ) : (
+                <>
+                  <td>{m.label}</td>
+                  <td>{m.type}</td>
+                  <td>{m.value}</td>
+                  <td>
+                    <button className="status-pill" onClick={() => toggleEnabled(m)}>
+                      {m.enabled ? 'enabled' : 'disabled'}
+                    </button>
+                  </td>
+                  <td className="admin-table-actions">
+                    <button onClick={() => startEdit(m)}>Edit</button>
+                    <button onClick={() => remove(m)}>Delete</button>
+                  </td>
+                </>
+              )}
             </tr>
           ))}
         </tbody>
       </table>
+      {editError && <p className="form-error">{editError}</p>}
 
       <h2>Add a channel</h2>
       <form onSubmit={handleAdd} className="admin-form admin-form-inline">

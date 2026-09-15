@@ -1,14 +1,16 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
+import { useAuth } from '../../context/AuthContext';
 import type { Category, Product, ProductImage } from '../../types/database';
 import { isValidImageFile, isValidPrice, slugify } from '../../utils/validation';
-import { getProductImageUrl, replaceProductImage } from '../../utils/storage';
+import { getProductImageUrl, replaceProductImage, deleteProductImage } from '../../utils/storage';
 
 export function AdminProductForm() {
   const { id } = useParams<{ id: string }>();
   const isNew = !id || id === 'new';
   const navigate = useNavigate();
+  const { profile } = useAuth();
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [name, setName] = useState('');
@@ -76,14 +78,26 @@ export function AdminProductForm() {
 
     setSaving(true);
     try {
+      // Ensure slug is unique by appending a short suffix if needed
+      let slug = slugify(name);
+      const { data: existingSlug } = await supabase
+        .from('products')
+        .select('id')
+        .eq('slug', slug)
+        .maybeSingle();
+      if (existingSlug && (!isNew || (existingSlug as Product).id !== id)) {
+        slug = `${slug}-${crypto.randomUUID().slice(0, 6)}`;
+      }
+
       const payload = {
         name: name.trim(),
-        slug: slugify(name),
+        slug,
         price: priceNumber,
         description: description.trim() || null,
         category_id: categoryId || null,
         featured,
         status,
+        ...(isNew ? { created_by: profile?.id ?? null } : {}),
       };
 
       let productId = id;
@@ -101,24 +115,36 @@ export function AdminProductForm() {
       }
 
       if (newImageFile && productId) {
-        const path = await replaceProductImage(
+        // Step 1: Upload the new file (does NOT delete the old one)
+        const newPath = await replaceProductImage(
           productId,
           newImageFile,
           existingImage?.storage_path || null
         );
 
+        // Step 2: Update the DB record to point to the new file
         if (existingImage) {
           await supabase
             .from('product_images')
-            .update({ storage_path: path })
+            .update({ storage_path: newPath })
             .eq('id', existingImage.id);
         } else {
           await supabase.from('product_images').insert({
             product_id: productId,
-            storage_path: path,
+            storage_path: newPath,
             is_primary: true,
             sort_order: 0,
           });
+        }
+
+        // Step 3: Only NOW delete the old file (after DB is updated)
+        if (existingImage?.storage_path) {
+          try {
+            await deleteProductImage(existingImage.storage_path);
+          } catch {
+            // Non-fatal: the new image is live and the DB is correct.
+            // A stale file left in storage is acceptable.
+          }
         }
       }
 
