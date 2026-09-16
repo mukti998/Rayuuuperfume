@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import type { ContactMethod } from '../../types/database';
 import { isValidEmail } from '../../utils/validation';
+import { ContactIcon } from '../../components/ContactIcon';
 
 export function Contact() {
   const [methods, setMethods] = useState<ContactMethod[]>([]);
@@ -59,6 +60,7 @@ export function Contact() {
       <div className="contact-row">
         {methods.map((m) => (
           <a key={m.id} className="contact-chip" href={contactHref(m)} target="_blank" rel="noreferrer">
+            <ContactIcon type={m.type} />
             {m.label}
           </a>
         ))}

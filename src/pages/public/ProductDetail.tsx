@@ -5,6 +5,7 @@ import type { ContactMethod, Product, ProductImage } from '../../types/database'
 import { getProductImageUrl } from '../../utils/storage';
 import { formatPrice } from '../../utils/format';
 import { useCart } from '../../context/CartContext';
+import { ContactIcon } from '../../components/ContactIcon';
 
 export function ProductDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -102,6 +103,7 @@ export function ProductDetail() {
                 target="_blank"
                 rel="noreferrer"
               >
+                <ContactIcon type={m.type} />
                 {m.label}
               </a>
             ))

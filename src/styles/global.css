@@ -67,8 +67,10 @@ main { min-height: 70vh; padding: 40px; max-width: 1100px; margin: 0 auto; }
 .contact-row { display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0; }
 .contact-chip {
   border: 1px solid var(--line); padding: 10px 20px; border-radius: 2px; font-size: 14px;
+  display: inline-flex; align-items: center; gap: 8px;
 }
 .contact-chip:hover { border-color: var(--lemon); color: var(--lemon-bright); }
+.contact-chip-icon { flex-shrink: 0; }
 
 .contact-form { display: flex; flex-direction: column; gap: 14px; max-width: 480px; margin-top: 20px; }
 .contact-form label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: var(--ivory-dim); }
