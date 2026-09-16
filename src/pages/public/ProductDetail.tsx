@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
 import type { ContactMethod, Product, ProductImage } from '../../types/database';
 import { getProductImageUrl } from '../../utils/storage';
+import { formatPrice } from '../../utils/format';
 
 export function ProductDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -69,7 +70,7 @@ export function ProductDetail() {
       </div>
       <div className="product-detail-info">
         <h1>{product.name}</h1>
-        <p className="price">₦{product.price.toLocaleString()}</p>
+        <p className="price">{formatPrice(product.price)}</p>
         <p className="description">{product.description}</p>
 
         <h2>Order this scent</h2>

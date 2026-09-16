@@ -13,6 +13,7 @@ import { AdminLogin } from './pages/admin/AdminLogin';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { AdminProducts } from './pages/admin/AdminProducts';
 import { AdminProductForm } from './pages/admin/AdminProductForm';
+import { AdminCategories } from './pages/admin/AdminCategories';
 import { AdminContactMethods } from './pages/admin/AdminContactMethods';
 import { AdminInquiries } from './pages/admin/AdminInquiries';
 import { AdminWorkflows } from './pages/admin/AdminWorkflows';
@@ -52,6 +53,7 @@ export default function App() {
             <Route path="products" element={<AdminProducts />} />
             <Route path="products/new" element={<AdminProductForm />} />
             <Route path="products/:id/edit" element={<AdminProductForm />} />
+            <Route path="categories" element={<AdminCategories />} />
             <Route path="contact-methods" element={<AdminContactMethods />} />
             <Route path="inquiries" element={<AdminInquiries />} />
             <Route path="workflows" element={<AdminWorkflows />} />

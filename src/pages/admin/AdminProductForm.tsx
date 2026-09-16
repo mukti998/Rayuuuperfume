@@ -165,7 +165,7 @@ export function AdminProductForm() {
           <input value={name} onChange={(e) => setName(e.target.value)} required />
         </label>
         <label>
-          Price (₦)
+          Price (Birr)
           <input type="number" step="0.01" min="0" value={price} onChange={(e) => setPrice(e.target.value)} required />
         </label>
         <label>

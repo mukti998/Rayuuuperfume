@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient';
 import { deleteAllProductImages } from '../../utils/storage';
 import type { Product } from '../../types/database';
+import { formatPrice } from '../../utils/format';
 
 export function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -63,7 +64,7 @@ export function AdminProducts() {
             {products.map((p) => (
               <tr key={p.id}>
                 <td>{p.name}</td>
-                <td>₦{p.price.toLocaleString()}</td>
+                <td>{formatPrice(p.price)}</td>
                 <td>
                   <button className="status-pill" onClick={() => togglePublish(p)}>
                     {p.status}

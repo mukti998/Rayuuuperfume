@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import type { Product, ProductImage } from '../types/database';
 import { getProductImageUrl } from '../utils/storage';
+import { formatPrice } from '../utils/format';
 
 export function ProductCard({ product, image }: { product: Product; image?: ProductImage }) {
   return (
@@ -13,7 +14,7 @@ export function ProductCard({ product, image }: { product: Product; image?: Prod
         )}
       </div>
       <h3>{product.name}</h3>
-      <p className="price">₦{product.price.toLocaleString()}</p>
+      <p className="price">{formatPrice(product.price)}</p>
     </Link>
   );
 }

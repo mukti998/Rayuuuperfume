@@ -39,6 +39,7 @@ export function AdminLayout() {
         <nav>
           <NavLink to={`${ADMIN_PATH}`} end>Dashboard</NavLink>
           <NavLink to={`${ADMIN_PATH}/products`}>Products</NavLink>
+          <NavLink to={`${ADMIN_PATH}/categories`}>Categories</NavLink>
           <NavLink to={`${ADMIN_PATH}/contact-methods`}>Contact Methods</NavLink>
           <NavLink to={`${ADMIN_PATH}/inquiries`}>Inquiries</NavLink>
           <NavLink to={`${ADMIN_PATH}/workflows`}>Workflows</NavLink>
