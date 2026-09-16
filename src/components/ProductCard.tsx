@@ -2,8 +2,16 @@ import { Link } from 'react-router-dom';
 import type { Product, ProductImage } from '../types/database';
 import { getProductImageUrl } from '../utils/storage';
 import { formatPrice } from '../utils/format';
+import { useCart } from '../context/CartContext';
 
 export function ProductCard({ product, image }: { product: Product; image?: ProductImage }) {
+  const { addItem } = useCart();
+
+  function handleAdd(e: React.MouseEvent) {
+    e.preventDefault();
+    addItem(product, image);
+  }
+
   return (
     <Link to={`/products/${product.slug}`} className="product-card">
       <div className="product-card-image">
@@ -15,6 +23,7 @@ export function ProductCard({ product, image }: { product: Product; image?: Prod
       </div>
       <h3>{product.name}</h3>
       <p className="price">{formatPrice(product.price)}</p>
+      <button className="btn-gold card-add-btn" onClick={handleAdd}>Add to cart</button>
     </Link>
   );
 }

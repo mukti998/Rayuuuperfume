@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
 import { ProtectedRoute, ADMIN_PATH } from './components/admin/ProtectedRoute';
 import { PublicLayout } from './components/layout/PublicLayout';
 import { AdminLayout } from './components/layout/AdminLayout';
@@ -23,6 +24,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <CartProvider>
         <Routes>
           {/* Public site — the only routes linked anywhere in the UI */}
           <Route element={<PublicLayout />}>
@@ -60,6 +62,7 @@ export default function App() {
             <Route path="audit-logs" element={<AdminAuditLogs />} />
           </Route>
         </Routes>
+        </CartProvider>
       </AuthProvider>
     </BrowserRouter>
   );
